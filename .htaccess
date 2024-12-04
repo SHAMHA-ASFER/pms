@@ -1,0 +1,10 @@
+RewriteEngine On
+
+# Redirect www to non-www (Your principle)
+RewriteCond %{HTTP_HOST} ^www\.(.*)$ [NC]
+RewriteRule ^(.*)$ http://%1/$1 [R=301,L]
+
+# If the request is not an existing file or directory, rewrite to index.php (My principle)
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.php [QSA,L]
