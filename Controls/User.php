@@ -7,6 +7,7 @@ class UserController extends Controller {
     public function __construct() {
         parent::__construct();
         $this->userModel = new UserModel(); 
+        $this->initNav();
     }
 
     public function login(){ 
@@ -17,15 +18,15 @@ class UserController extends Controller {
             while($row = $result->fetch_assoc()){
                 $this->loginUser($row["id"], $row["fname"], $row["lname"], $row["email"], $row["profile"], $row["role"]);
                 if ($row["role"] == 'ANA'){
-                    $this->redirect('/analyzer');
+                    $this->redirect('/analyzer/dashboard');
                 }else if($row["role"] == 'PM'){
-                    $this->redirect('/manager');
+                    $this->redirect('/manager/dashboard');
                 }else if($row["role"] == 'PMO'){
-                    $this->redirect('/pmo');
+                    $this->redirect('/pmo/dashboard');
                 }else if($row["role"] == 'DEV'){
-                    $this->redirect('/dev');
+                    $this->redirect('/dev/dashboard');
                 }else if($row["role"] == 'QA'){
-                    $this->redirect('/qa');
+                    $this->redirect('/qa/dashboard');
                 }
             }
         }
@@ -61,5 +62,17 @@ class UserController extends Controller {
     
     public function logout(){
         $this->logoutUser();
+    }
+
+    public function home() {
+        include_once __DIR__ ."/../views/home.php";
+    }
+
+    public function about() {
+
+    }
+
+    public function contact() {
+
     }
 }

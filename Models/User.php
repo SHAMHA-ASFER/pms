@@ -16,7 +16,8 @@ class UserModel extends Model {
             address VARCHAR(256),
             role ENUM('PM', 'PMO', 'QA', 'DEV', 'ANA'),
             profile VARCHAR(256) NOT NULL,
-            joined DATE DEFAULT (CURRENT_TIMESTAMP)
+            joined DATE DEFAULT (CURRENT_TIMESTAMP),
+            manager INT REFERENCES `user` (id) ON DELETE CASCADE
         );
     ";
     private $new = "INSERT INTO `user` (fname, lname, username, password, email, contact, dob, nic, address, role, profile) VALUES 
@@ -27,6 +28,8 @@ class UserModel extends Model {
     private $get_all = "SELECT * FROM `user`";
     private $authenticate = "SELECT id, fname, lname, email, profile, role FROM `user` WHERE username = ? AND password = ?";
     private $user_count = "SELECT COUNT(*) as count FROM `user`";
+    private $get_users_by_manager = "SELECT * FROM `user` WHERE manager = ? AND role = ?";
+    private $get_name = "SELECT fname, lname FROM `user` WHERE id = ?";
 
     public function __construct() {
         parent::__construct();
@@ -66,5 +69,13 @@ class UserModel extends Model {
         while ($row = $result->fetch_assoc()) {
             return $row["count"];
         }
+    }
+
+    public function getUserByManager($mgr_id, $role) {
+        return $this->fetch($this->get_users_by_manager, [$mgr_id, $role],"is");
+    }
+
+    public function getName($id) {
+        return $this->fetch($this->get_name, [$id],"i");
     }
 }

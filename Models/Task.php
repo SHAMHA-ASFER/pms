@@ -8,10 +8,10 @@ class TaskModel extends Model{
         name VARCHAR(100) NOT NULL,
         description TEXT,
         deadline DATE,
-        status ENUM('not started', 'in progress', 'completed'),
-        created_by INT REFERENCES user(id),
-        assignee INT REFERENCES user(id),
-        project_id INT REFERENCES project(id)
+        status ENUM('pending', 'in progress', 'completed'),
+        created_by INT REFERENCES user(id) ON DELETE CASCADE,
+        assignee INT REFERENCES user(id) ON DELETE CASCADE,
+        project_id INT REFERENCES project(id) ON DELETE CASCADE
     );
     ";
     private $new = "INSERT INTO `task` (name,description,deadline,status,created_by,assignee,project_id) VALUES (?,?,?,?,?,?,?);";
@@ -51,4 +51,3 @@ class TaskModel extends Model{
         $this->delete($this->delete_task,[$id],"i");
     }
 }
-?>

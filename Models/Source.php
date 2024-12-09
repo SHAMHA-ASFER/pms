@@ -9,7 +9,7 @@ class SourceModel extends Model{
         name VARCHAR(100),
         location TEXT,
         last_modified DATE DEFAULT (CURRENT TIMESTAMP),
-        task_id INT REFERENCES task(task_id)
+        task_id INT REFERENCES task(task_id) ON DELETE CASCADE
     );
     ";
 

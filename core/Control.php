@@ -66,4 +66,12 @@ class Controller{
 
         $this->redirect("/login");
     }
+
+    public function createFolder($name) {
+        $location = __DIR__ ."/../assets/projects/";
+        $path = $location . $name;
+        if (!file_exists($path)) {
+            mkdir($path, 0755);
+        }
+    }
 }

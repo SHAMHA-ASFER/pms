@@ -6,7 +6,7 @@ class FeedbackModel extends Model {
         id INT AUTO_INCREMENT PRIMARY KEY,
         subject VARCHAR(100) NOT NULL,
         body TEXT,
-        given_by INT REFERENCES user(id)
+        given_by INT REFERENCES user(id) ON DELETE CASCADE
     ";
 
     private $new = "INSERT INTO `feedback` (subject,body) VALUES (?,?)";
