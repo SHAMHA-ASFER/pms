@@ -42,7 +42,6 @@
         crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/js/all.min.js"></script>
     <script defer src="https://cdn.datatables.net/2.1.8/js/dataTables.bootstrap5.js"></script>
-
 </footer>
 </body>
 </htm>

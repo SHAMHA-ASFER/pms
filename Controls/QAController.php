@@ -12,6 +12,6 @@ class QAController extends Controller{
     }
 
     public function index(){
-        include_once __DIR__ ."/../views/QA.php";
+        include_once __DIR__ ."/../views/qa/QA.php";
     }
 }

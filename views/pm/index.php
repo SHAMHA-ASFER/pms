@@ -58,4 +58,56 @@
             </div>
         </form>
     </div>
+    <div class="p-5">
+        <table class="table table-striped" id="projectsTable">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Project</th>
+                    <th>Desc</th>
+                    <th>Duration</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php
+                $projects = $this->projectModel->getAllProjects();
+                $i = 1;
+                while ($project = $projects->fetch_assoc()) {
+                ?>
+                <tr>
+                    <td><?php echo $i; ?></td>
+                    <td><?php echo $project['name']; ?></td>
+                    <td class="col-md-4"><?php echo $project['description']; ?></td>
+                    <td class="text-center"><?php echo $project['create_date'] . "<br>to<br>" . $project['deadline']; ?></td>
+                    <td>
+                        <form action="/project/status/change" method="post">
+                            <input type="hidden" name="pro_id" value="<?php echo $project["id"]; ?>">
+                            <select name="status" class="form-select" onchange="form.submit()">
+                                <option value="completed" <?php if ($project['status'] == 'completed') { echo 'selected'; } ?>>Completed</option>
+                                <option value="pending" <?php if ($project['status'] == 'pending') { echo 'selected'; } ?>>Pending</option>
+                            </select>
+                        </form>
+                    </td>
+                    <td>
+                        <form action="/project/remove" method="post">
+                           <input type="hidden" name="pro_id" value="<?php echo $project["id"]; ?>">
+                            <button class="btn btn-danger"><i class="fa fa-trash"></i>&nbsp;Remove</button>
+                        </form>
+                    </td>
+                </tr>
+                <?php
+                    $i++;
+                }
+                ?>
+            </tbody>
+        </table>
+    </div>
 </div>
+
+<script>
+    $(document).ready(function() {
+        $('#projectsTable').DataTable();
+    });
+</script>

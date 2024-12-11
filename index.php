@@ -50,6 +50,8 @@ $router->addRoute("POST","/task/create",[PMController::class,"createTask"]);
 $router->addRoute("POST","/taskmember/add",[PMController::class,"assignMember"]);
 $router->addRoute("POST","/taskmember/remove",[PMController::class,"removeMember"]);
 $router->addRoute("POST","/document/status",[PMController::class,"updateStatus"]);
+$router->addRoute("POST","/project/status/change",[PMController::class, "changeStatus"]);
+$router->addRoute("POST", "/project/remove", [PMController::class,"removeProject"]);
 
 include_once __DIR__ ."/header.php";
 $router->resolveRoute($request);

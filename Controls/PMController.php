@@ -201,4 +201,21 @@ class PMController extends Controller{
         }
         $this->redirect('/manager/handle/doc?page=task&id=' . $id);      
     }
+
+    public function changeStatus() {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $pro_id = $_POST['pro_id'];
+            $status = $_POST['status'];
+            $this->projectModel->updateStatus($pro_id, $status);
+        }
+        $this->redirect('/manager/dashboard');
+    }
+
+    public function Project() {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $pro_id = $_POST['pro_id'];
+            $this->projectModel->deleteProject($pro_id);
+        }
+        $this->redirect('/manager/dashboard');
+    }
 }   

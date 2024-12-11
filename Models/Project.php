@@ -9,14 +9,12 @@ class ProjectModel extends Model{
             description TEXT NOT NULL,
             create_date DATE DEFAULT (CURRENT_TIMESTAMP),
             deadline DATE NOT NULL,
-            status ENUM('active', 'completed', 'pending') DEFAULT 'pending',
+            status ENUM('completed', 'pending') DEFAULT 'pending',
             created_by INT REFERENCES user(user_id) ON DELETE CASCADE
         );
     ";
     private $new = "INSERT INTO `project` (name, description, created_by, deadline) VALUES (?,?,?,?);";
-    private $update_projectName ="UPDATE `project` SET name = ? WHERE id = ?";
-    private $update_description = "UPDATE `project` SET description = ? WHERE id = ?";
-    //private $update_status = "";
+    private $update_status = "UPDATE `project` SET status = ? WHERE id = ?";
     private $delete_project = "DELETE FROM `project` WHERE id = ? ";
     private $get_all = "SELECT * FROM `project`";
     
@@ -35,14 +33,6 @@ class ProjectModel extends Model{
         $this->create($this->new,[$name,$description,$created_by, $deadline],"ssis");
     }
 
-    public function update_ProjectName($id,$name){
-        $this->update($this->update_projectName,[$id,$name],"is");
-    }
-
-    public function update_description($id,$description){
-        $this->update($this->update_description,[$id,$description],"is");
-    }
-
     public function deleteProject($id){
         $this->delete($this->delete_project,[$id],"i");
     }
@@ -55,5 +45,7 @@ class ProjectModel extends Model{
         return $this->fetch($this->get_name,[$id],"i");
     }
 
-    
+    public function updateStatus($pro_id, $status) {
+        $this->update($this->update_status, [$status, $pro_id], "si");
+    }
 }
