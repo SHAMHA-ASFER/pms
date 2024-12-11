@@ -16,9 +16,12 @@ class DocumentModel extends Model{
     private $new = "INSERT INTO `document`(name , pro_id, location, updated_by) VALUES (?,?,?,?);";
     private $update_document = "UPDATE `document` SET location = ?, last_modified = CURRENT_TIMESTAMP WHERE id = ?";
     private $get_document = "SELECT * FROM `document` WHERE id = ?";
+    private $get_all_document_by_project = "SELECT * FROM  `document` WHERE pro_id = ?";
     private $get_all_document = "SELECT * FROM  `document`";
     private $delete_document = "DELETE FROM `document` WHERE id = ?";
     private $update_status = "UPDATE `document` SET status = ? WHERE id = ?";
+    private $status = "SELECT COLUMN_TYPE FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'document' AND COLUMN_NAME = 'status' AND TABLE_SCHEMA = 'projects';";
+    
 
     public function __construct(){
         parent::__construct();
@@ -45,11 +48,19 @@ class DocumentModel extends Model{
         return $this->fetch($this->get_document,[$id],"i");
     }
 
+    public function getAllDocumentsByProject($pro_id){
+        return $this->fetch($this->get_all_document_by_project, [$pro_id],"i");
+    }
+
     public function getAllDocuments(){
         return $this->fetch($this->get_all_document);
     }
 
-    public function setStatus($status) {
-        $this->update($this->update_status,[$status],"s");
+    public function setStatus($id, $status) {
+        $this->update($this->update_status,[$status,$id],"si");
+    }
+
+    public function getStatus(){
+        return $this->fetch($this->status);
     }
 }

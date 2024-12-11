@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
+<nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
     <div class="container-fluid">
         <a class="navbar-brand fw-bold" href="#"><?php echo $_SESSION['lname'] . ","; ?></a>
         <!-- Toggler Button -->

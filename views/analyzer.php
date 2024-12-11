@@ -1,5 +1,5 @@
 <div class="container mt-5 mb-5">
-    <div class="d-flex justify-content-center ms-5 me-5">
+    <div class="d-flex justify-content-center ms-5 me-5 pt-5">
         <div class="w-100">
             <form action="/doc/create" method="post" enctype="multipart/form-data"
                 class="d-flex justify-content-between">
@@ -26,7 +26,7 @@
                                     $projectName = $r["name"];
                                 }
                                 ?>
-                                <option value="<?php echo $row['pro_id']; ?>"><?php echo $projectName   ; ?></option>
+                                <option value="<?php echo $row['pro_id']; ?>"><?php echo $projectName; ?></option>
                                 <?php
                             }
                             ?>
@@ -69,23 +69,57 @@
                             }
                             ?>
                             <tr>
-                                <td><?php echo $row['name']; ?></td>
-                                <td><?php echo $projectName; ?></td>
-                                <td style="min-width: 200px;display:flex;">
-                                    <button class="btn btn-primary me-3" data-bs-toggle="modal"
-                                        data-bs-target="#update-doc-<?php echo $row['id']; ?>"><i
-                                            class="fa fa-refresh"></i>&nbsp;Update</button>
-                                    <?php
+                                <td style="background-color:<?php 
+                                if ($row['status'] == 'pending') {
+                                    echo 'rgba(247, 254, 144, 0.5)';
+                                } else if ($row['status'] == 'accepted') {
+                                    echo 'rgba(128, 255, 109, 0.5)';
+                                } else if ($row['status'] == 'denied') {
+                                    echo 'rgba(255, 145, 145, 0.5)';
+                                }?>;"><?php echo $row['name']; ?></td>
+                                <td style="background-color:<?php 
+                                if ($row['status'] == 'pending') {
+                                    echo 'rgba(247, 254, 144, 0.5)';
+                                } else if ($row['status'] == 'accepted') {
+                                    echo 'rgba(128, 255, 109, 0.5)';
+                                } else if ($row['status'] == 'denied') {
+                                    echo 'rgba(255, 145, 145, 0.5)';
+                                }?>;"><?php echo $projectName; ?></td>
+                                <?php
+                                if ($row['status'] == 'accepted') {
+                                ?>
+                                    <td style="background-color:<?php 
                                     if ($row['status'] == 'pending') {
-                                        ?>
+                                        echo 'rgba(247, 254, 144, 0.5)';
+                                    } else if ($row['status'] == 'accepted') {
+                                        echo 'rgba(128, 255, 109, 0.5)';
+                                    } else if ($row['status'] == 'denied') {
+                                        echo 'rgba(255, 145, 145, 0.5)';
+                                    }?>;" class="col-md-3">
+                                    <span>Document Validated&nbsp;<i class="fa fa-info-circle pt-1 ps-2"></i>
+                                    </span>
+                                    </td>
+                                <?php
+                                } else { ?>
+                                    <td style="background-color:<?php 
+                                    if ($row['status'] == 'pending') {
+                                        echo 'rgba(247, 254, 144, 0.5)';
+                                    } else if ($row['status'] == 'accepted') {
+                                        echo 'rgba(128, 255, 109, 0.5)';
+                                    } else if ($row['status'] == 'denied') {
+                                        echo 'rgba(255, 145, 145, 0.5)';
+                                    }?>;min-width: 200px;display:flex;">
+                                        <button class="btn btn-primary me-3" data-bs-toggle="modal"
+                                            data-bs-target="#update-doc-<?php echo $row['id']; ?>"><i
+                                                class="fa fa-refresh"></i>&nbsp;Update</button>
                                         <form action="/doc/delete" method="post">
                                             <input type="hidden" name="doc" value="<?php echo $row['id']; ?>">
                                             <button class="btn btn-danger"><i class="fa fa-trash"></i>&nbsp;Delete</button>
                                         </form>
-                                        <?php
-                                    }
-                                    ?>
-                                </td>
+                                    </td>
+                                    <?php
+                                }
+                                ?>
                             </tr>
                             <?php
                         }

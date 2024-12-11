@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
+<nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
     <div class="container-fluid">
         <a class="navbar-brand" href="/"><?php echo $_SESSION["lname"] . "," ?></a>
         <div class="collapse navbar-collapse" id="navbarNav">
@@ -17,6 +17,12 @@
                 </li>
                 <li class="nav-item mx-2">
                     <a class="nav-link" href="/manager/handle/qa">QAs</a>
+                </li>
+                <li class="nav-item mx-2">
+                    <a class="nav-link" href="/manager/handle/task">Task</a>
+                </li>
+                <li class="nav-item mx-2">
+                    <a class="nav-link" href="/manager/handle/doc">Document</a>
                 </li>
             </ul>
         </div>

@@ -1,5 +1,5 @@
 <div class="container-fluid w-100 mt-5 mb-5">
-    <div class="d-flex justify-content-center">
+    <div class="d-flex justify-content-center pt-5">
         <div class="card mx-auto col-md-11">
             <div class="card-header">
                 <h5>Manage Analyzers For Each Projects</h5>

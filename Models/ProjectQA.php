@@ -12,7 +12,7 @@ class ProjectQAModel extends Model {
     ";
 
     private $new = "INSERT INTO `project_qa` (pro_id,user_id) VALUES (?,?)";
-    private $get_qas = "SELECT user_id FROM WHERE pro_id = ?";
+    private $get_qas = "SELECT user_id FROM `project_qa` WHERE pro_id = ?";
     private $get_projects = "SELECT pro_id FROM WHERE user_id = ?";
     private $count = "SELECT COUNT(*) AS count FROM `project_qa` WHERE pro_id=?";
     private $remove = "DELETE FROM `project_qa` WHERE pro_id = ? AND user_id=?";

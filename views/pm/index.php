@@ -1,5 +1,5 @@
 <div class="container mt-5 mb-5">
-    <div class="row gx-5" style="max-width: 95%; margin: auto;">
+    <div class="row pt-5 gx-5" style="max-width: 95%; margin: auto;">
         <form action="/project/create" method="post">
             <h4>Create Project</h4>
             <div class="d-flex">

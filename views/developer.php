@@ -1,5 +1,5 @@
-<div class="container-fluid" data-page="file-explorer">
-    <div class="row">
+<div class="container-fluid mt-5" data-page="file-explorer">
+    <div class="row pt-5">
         <!-- Sidebar -->
         <div class="col-md-2 bg-light vh-100 overflow-auto p-3">
             <h4>File Explorer</h4>

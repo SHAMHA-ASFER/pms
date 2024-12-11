@@ -1,5 +1,5 @@
 <div class="container-fluid w-100 mt-5 mb-5">
-    <div class="d-flex justify-content-center">
+    <div class="d-flex justify-content-center pt-5">
         <div class="card mx-auto col-md-11">
             <div class="card-header">
                 <h5>Manage QA For Each Projects</h5>
@@ -19,16 +19,16 @@
                         $projects = $this->projectModel->getAllProjects();
                         while($project = $projects->fetch_assoc()){
                             $qa_count = 1;
-                            $counts = $this->ProjectQAModel->getCount($project["id"]);
+                            $counts = $this->projectQAModel->getCount($project["id"]);
                             while($count = $counts->fetch_assoc()){
                                 $qa_count = $count["count"];
                             }
-                        $qas = $this->ProjectQAModel->getAllQAs($project['id']);
+                        $qas = $this->projectQAModel->getAllQAs($project['id']);
                         while($qa = $qas->fetch_assoc()){
                             $name = "";
                             $users = $this->userModel->getName($qa["user_id"]);
-                            while($users = $users->fetch_assoc()){
-                                $name = ucfirst($users["fname"]) . " " . ucfirst($users["lname"]);
+                            while($user = $users->fetch_assoc()){
+                                $name = ucfirst($user["fname"]) . " " . ucfirst($user["lname"]);
                             }
                             if ($i == 0){
                                 ?>
@@ -36,8 +36,8 @@
                                     <td rowspan="<?php echo $qa_count; ?>"><?php echo $project['name']; ?></td>
                                     <td class="text-center"><?php echo $name; ?></td>
                                     <td class="col-md-2" rowspan="<?php echo $qa_count; ?>">
-                                        <button class="btn btn-primary" data-bs-toggle ="modal" data-bs-target="#addQa-<?php echo $project['id']; ?>">&nbsp;Add</button>
-                                        <button class="btn btn-danger">&nbsp;Remove</button>
+                                        <button class="btn btn-primary" data-bs-toggle ="modal" data-bs-target="#addQa-<?php echo $project['id']; ?>"><i class="fa fa-plus"></i>&nbsp;Add</button>
+                                        <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#removeqa-<?php echo $project["id"]; ?>"><i class="fa fa-trash"></i>&nbsp;Remove</button>
                                     </td>
                                 </tr>
                                 <?php
@@ -56,7 +56,7 @@
                                 <td><?php echo $project['name']; ?></td>
                                 <td class="text-center">Not Available</td>
                                 <td class="col-md-1">
-                                    <button class="btn btn-primary">&nbsp;Add</button>
+                                    <button class="btn btn-primary" data-bs-toggle ="modal" data-bs-target="#addQa-<?php echo $project['id']; ?>"><i class="fa fa-plus"></i>&nbsp;Add</button>
 
                                 </td>
                             </tr>
@@ -95,7 +95,7 @@ while($project = $projects->fetch_assoc()){
                                 <option value="Select" default>Select</option>
                                 <?php
                                 $users = $this->userModel->getUserByManager($project['created_by'],"QA");
-                                while($users = $users->fetch_assoc()){
+                                while($user = $users->fetch_assoc()){
                                     ?>
                                     <option value="<?php echo $user['id']; ?>">
                                         <?php echo ucfirst($user['fname']) . " " . ucfirst($user['lname']); ?>
@@ -122,12 +122,12 @@ while($project = $projects->fetch_assoc()){
     ?>
     <div class="modal fade" id="removeqa-<?php echo $project["id"]; ?>">
         <div class="modal-dialog">
-            <div class="modal content">
-                <form action="">
+            <div class="modal-content">
+                <form action="/projectqa/remove" method="post">
                     <div class="modal-header">
                         <div class="d-flex justify-content-between w-100">
                             <h5>Remove QA</h5>
-                            <button class="btn btn-danger" data-bs-dismiss="modal"></button>
+                            <button class="btn btn-close" data-bs-dismiss="modal"></button>
                         </div>
                     </div>
                     <div class="modal-body">

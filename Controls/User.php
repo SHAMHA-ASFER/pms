@@ -75,4 +75,17 @@ class UserController extends Controller {
     public function contact() {
 
     }
+
+    public function getUsersByManagerAndRole() {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $type = $_POST['type'];
+            $pm = $_POST['pm'];
+            $users = $this->userModel->getUserByManager($pm, $type);
+            echo '<?>';
+            while ($user = $users->fetch_assoc()) {
+                echo $user['id']. ','. ucfirst($user['fname']) . ' ' . ucfirst($user['lname']).'<*>';
+            }
+            echo '<?>';
+        }
+    }
 }

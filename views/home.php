@@ -1,5 +1,4 @@
-<div 
-    class="d-flex align-items-center vh-100 text-black text-center text-md-start" 
+<div class="d-flex align-items-center vh-100 text-black text-center text-md-start mt-5" 
     style="background: url('/assets/images/logo4.png') no-repeat center center/cover;">
     <div class="container">
         <div class="row align-items-center">

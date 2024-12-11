@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-transparent position-absolute w-100 py-3">
+<nav class="navbar navbar-expand-lg navbar-light bg-transparent position-absolute w-100 py-3 fixed-top">
     <div class="container-fluid">
         <div class="d-flex align-items-center ms-3 ms-md-5">
             <h2 class="navbar-brand fw-bold mb-0 text-dark fs-4">ProSync.</h2>
