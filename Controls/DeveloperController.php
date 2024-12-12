@@ -44,7 +44,6 @@ class DeveloperController extends Controller
                 if ($file->isDir()) {
                     $directory['children'][] = $this->traverseDirectory($file->getRealPath());
                 } else {
-                    echo '<script>console.log("'.$file->getFilename().'");</script>';
                     $directory['children'][] = [
                         'name' => $file->getFilename(), // File name
                         'type' => 'file', // Type is file
@@ -58,11 +57,33 @@ class DeveloperController extends Controller
         return $directory;
     }
 
-    public function renderExplorer($files, $project, $project_id, $nest) {
-        // $nest++;
+    public function renderExplorer(&$files, $project, &$project_id, $nest) {
+        $myNest = $nest;
+        $i = $project_id * 1000;
+        echo '<div class="w-25">';
         foreach ($files as $file) {
-            echo $file['name'] . "<br>";
+            $icon = "";
+            if (isset($file['extension']) && $file['extension'] == 'docx') {
+                $icon = '<i class="fa fa-book"></i>&nbsp;';
+            } else if (isset($file['extension']) && $file['extension'] == 'php') {
+                $icon = '<i class="fa fa-code"></i>&nbsp;';
+            } else if ($file['type'] == 'directory') {
+                $icon = '<i class="fa fa-folder"></i>&nbsp;';
+            } 
+            if ($file['type'] == 'directory') {
+                echo '<h7 class="p-1 no-select text-nowrap" id="projectToggle-'.$i.'" style="margin-left:'.($myNest * 10).'px;margin-top:-5px;">
+                    <i class="fa fa-angle-right" id="toggle-icon-'.$i.'"></i>
+                    &nbsp;&nbsp;' . $icon . $file['name'] .'
+                </h7>
+                <div class="collapse" id="collapsible-'.$i.'">';
+                $this->renderExplorer($file['children'], $project, $i, ($nest + 1));
+            } else {
+                echo '<p class="fw-light d-inline-block text-truncate" style="max-width:300px;font-size:14px;margin-left:'. $myNest * 15 .'px;">'.$icon . $file['name'].'</p>';
+            }
+            $i++;
         }
+        echo '  </div>
+            </div>';
     }
 
     public function isAssociativeArray($array) {

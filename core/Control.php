@@ -1,6 +1,6 @@
 <?php
 require_once __DIR__ ."/../Models/User.php";
-
+ob_start();
 class Controller{
     public function __construct() {
         if (session_status() == PHP_SESSION_NONE){
@@ -42,6 +42,7 @@ class Controller{
 
     public function redirect($path) {
         header("Location: ". $path);
+        exit;
     }
 
     public function loginUser($id, $fname, $lname, $email, $profile, $role) {
