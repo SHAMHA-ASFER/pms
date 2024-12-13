@@ -65,17 +65,14 @@ class DeveloperController extends Controller
     public function renderExplorer(&$files, $project, &$project_id, $nest) {
         $myNest = $nest;
         $i = $project_id * 1000;
-        echo '<div class="w-100">';
         foreach ($files as $file) {
             $icon = "";
             if (isset($file['extension']) && $file['extension'] == 'docx') {
-                $icon = '<i class="fa fa-book text-success"></i>&nbsp;';
+                $icon = '<i class="fa fa-book"></i>&nbsp;';
             } else if (isset($file['extension']) && $file['extension'] == 'php') {
-                $icon = '<i class="fa fa-code text-danger"></i>&nbsp;';
-            } else if (isset($file['extension']) && $file['extension'] == 'png') {
-                $icon = '<i class="fa fa-image text-primary"></i>&nbsp;';
+                $icon = '<i class="fa fa-code"></i>&nbsp;';
             } else if ($file['type'] == 'directory') {
-                $icon = '<i class="fa fa-folder text-warning"></i>&nbsp;';
+                $icon = '<i class="fa fa-folder"></i>&nbsp;';
             } 
             if ($file['type'] == 'directory') {
                 echo '<h6 class="p-1 no-select text-nowrap" id="projectToggle-'.$i.'" style="margin-left:'.($myNest * 10).'px;margin-top:-5px;">
@@ -85,12 +82,12 @@ class DeveloperController extends Controller
                 <div class="collapse" id="collapsible-'.$i.'">';
                 $this->renderExplorer($file['children'], $project, $i, ($nest + 1));
             } else {
-                echo '<p class="fw-medium d-inline-block text-truncate" style="max-width:300px;font-size:14px;margin-top:-10px;margin-left:'. $myNest * 15 .'px;">'.$icon . $file['name'].'</p><br>';
+                echo '<p class="fw-medium d-inline-block text-truncate w-25" style="max-width:300px;font-size:14px;margin-left:'. $myNest * 15 .'px;">'.$icon . $file['name'].'</p>';
             }
         
             $i++;
         }
-        echo '</div>
+        echo '
             </div>';
     }
 
