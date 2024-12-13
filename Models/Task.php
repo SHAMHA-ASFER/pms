@@ -3,20 +3,18 @@ require_once __DIR__ ."/../core/Model.php";
 
 class TaskModel extends Model{
     private $create_task_table = "
-    CREATE TABLE IF NOT EXISTS `task`(
-        id INT AUTO_INCREMENT PRIMARY KEY,
-        name VARCHAR(100) NOT NULL,
-        description TEXT,
-        deadline DATE,
-        status ENUM('pending', 'completed') DEFAULT 'pending',
-        created_by INT REFERENCES user(id) ON DELETE CASCADE,
-        project_id INT REFERENCES project(id) ON DELETE CASCADE
-    );
+        CREATE TABLE IF NOT EXISTS `task`(
+            id INT AUTO_INCREMENT PRIMARY KEY,
+            name VARCHAR(100) NOT NULL,
+            description TEXT,
+            deadline DATE,
+            status ENUM('pending', 'completed') DEFAULT 'pending',
+            created_by INT REFERENCES user(id) ON DELETE CASCADE,
+            project_id INT REFERENCES project(id) ON DELETE CASCADE
+        );
     ";
     private $new = "INSERT INTO `task` (name,description,deadline,created_by,project_id) VALUES (?,?,?,?,?);";
-    private $update_taskName = "UPDATE `task` SET name = ? WHERE id = ?";
-    private $update_deadline = "UPDATE `task` SET deadline = ? WHERE id = ?";
-    private $update_description = "UPDATE `task` SET deadline = ? WHERE id = ?";
+    private $update_status = "UPDATE `task` SET status = ? WHERE id = ?";
     private $delete_task = "DELETE FROM `task` WHERE id = ?";
     private $get_task = "SELECT * FROM `task` WHERE id = ?";
     private $get_all_task = "SELECT * FROM `task` WHERE project_id = ?";
@@ -34,16 +32,8 @@ class TaskModel extends Model{
         $this->insert($this->new,[$name,$description,$deadline,$created_by,$project_id],"sssii");
     }
 
-    public function updateTaskName($id,$name){
-        $this->update($this->update_taskName,[$id,$name],"is");
-    }
-
-    public function updateDeadline($id,$deadline){
-        $this->update($this->update_deadline,[$id,$deadline],"ii");
-    }
-
-    public function updateDescription($id,$description){
-        $this->update($this->update_description,[$id,$description],"is");
+    public function updateTaskStatus($id,$status){
+        $this->update($this->update_status,[$status,$id],"si");
     }
 
     public function getTask($id){

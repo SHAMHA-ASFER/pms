@@ -1,84 +1,53 @@
-<div class="container-fluid">
-    <div class="row">
-        <!-- Sidebar -->
-        <div class="col-md-2 bg-light">
-            <h4 class="py-3">QA Panel</h4>
-            <ul class="list-unstyled">
-                <li><a href="#" class="text-decoration-none d-block py-2">Project A</a></li>
-                <li><a href="#" class="text-decoration-none d-block py-2">Project B</a></li>
-            </ul>
-        </div>
-
-        <!-- Main Content -->
-        <div class="col-md-10">
-            <div class="py-3">
-                <h3>Validate Source Files - Project A</h3>
+<?php
+$page = isset($_GET['page']) ? $_GET['page'] : 'projects';
+?>
+<div class="container-fluid d-flex" style="margin: 0; padding: 0;">
+    <div class="w-75 mt-5 pt-3 min-vh-100">
+        <?php
+        switch ($page) {
+            case 'projects':
+                include_once __DIR__ .'/task/qa_pro.php';
+                break;
+            case 'task':
+                include_once __DIR__ .'/task/qa_task.php';
+                break;
+        }
+        ?>
+    </div>
+    <div class="pt-5 w-25 bg-light min-vh-100">
+        <nav class="p-3">
+            <h5 class="pt-4">Project Explorer</h5>
+            <div class="mt-4">
+                <?php
+                $projects = $this->projectModel->getAllProjects();
+                $i = 1;
+                while ($project = $projects->fetch_assoc()) {
+                    ?>
+                    <div>
+                        <h6 class="p-1 bg-light no-select" id="projectToggle-<?php echo $project['id']; ?>">
+                            <i class="fa fa-angle-right" id="toggle-icon-<?php echo $project['id']; ?>"></i>
+                            &nbsp;&nbsp;<i class="fa fa-folder text-warning"></i>&nbsp;<?php echo $project['name']; ?>
+                        </h6>
+                        <div class="collapse" id="collapsible-<?php echo $project['id']; ?>">
+                            <?php
+                            $files = $this->traverseDirectory(__DIR__ . '/../../assets/projects/' . $project['name'] . "/src");
+                            $this->renderExplorer($files['children'], $project['name'], $project['id'], $i);
+                            ?>
+                        </div>
+                    </div>
+                    <?php
+                    $i = 1;
+                }
+                ?>
             </div>
-
-            <div class="table-responsive">
-                <table class="table table-bordered mb-4" id="QATable">
-                    <thead>
-                        <tr>
-                            <th>File Name</th>
-                            <th>Developer</th>
-                            <th>Last Updated</th>
-                            <th>Task State</th>
-                            <th>Comments</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="qaTasksTable">
-                        <tr>
-                            <td>login.js</td>
-                            <td>John Doe</td>
-                            <td>Dec 01, 2024</td>
-                            <td>
-                                <select class="form-select" onchange="updateTaskState(this)">
-                                    <option value="pending">Pending</option>
-                                    <option value="in_progress">In Progress</option>
-                                    <option value="complete">Complete</option>
-                                </select>
-                            </td>
-                            <td>
-                                <textarea class="form-control" rows="1" placeholder="Add comments..."></textarea>
-                            </td>
-                            <td>
-                                <button class="btn btn-success btn-sm" onclick="approveTask(this)">Approve</button>
-                                <button class="btn btn-danger btn-sm" onclick="rejectTask(this)">Reject</button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>dashboard.css</td>
-                            <td>Jane Smith</td>
-                            <td>Nov 29, 2024</td>
-                            <td>
-                                <select class="form-select" onchange="updateTaskState(this)">
-                                    <option value="pending">Pending</option>
-                                    <option value="in_progress">In Progress</option>
-                                    <option value="complete">Complete</option>
-                                </select>
-                            </td>
-                            <td>
-                                <textarea class="form-control" rows="1" placeholder="Add comments..."></textarea>
-                            </td>
-                            <td>
-                                <button class="btn btn-success btn-sm" onclick="approveTask(this)">Approve</button>
-                                <button class="btn btn-danger btn-sm" onclick="rejectTask(this)">Reject</button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <div class="text-end mt-4 mb-4">
-                <button class="btn btn-primary" onclick="saveChanges()">Save Changes</button>
-            </div>
-        </div>
+        </nav>
     </div>
 </div>
 
 <script>
-    $(document).ready(function () {
-        $('#QATable').DataTable();
+    $('[id^="projectToggle-"]').click(function () {
+        var id = $(this).attr('id').split('-')[1];
+        $('#toggle-icon-' + id).toggleClass('rotated');
+        $('#collapsible-' + id).collapse('toggle');
     });
 </script>

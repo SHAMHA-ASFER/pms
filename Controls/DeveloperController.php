@@ -1,6 +1,7 @@
  <?php
 require_once __DIR__ . "/../Models/User.php";
 require_once __DIR__ . "/../Models/Task.php";
+require_once __DIR__ . "/../Models/File.php";
 require_once __DIR__ . "/../Models/TaskDeveloper.php";
 require_once __DIR__ . "/../Models/ProjectDeveloper.php";
 require_once __DIR__ . "/../Models/Project.php";
@@ -12,6 +13,7 @@ class DeveloperController extends Controller
     private $taskModel;
     private $taskDeveloperModel;
     private $userModel;
+    private $fileModel;
 
     public function __construct()
     {
@@ -20,6 +22,7 @@ class DeveloperController extends Controller
         $this->projectModel = new ProjectModel();
         $this->taskModel = new TaskModel();
         $this->userModel = new UserModel();
+        $this->fileModel = new FileModel();
         $this->projectDeveloperModel = new ProjectDeveloperModel();
         $this->taskDeveloperModel = new TaskDeveloperModel();
     }
@@ -29,76 +32,8 @@ class DeveloperController extends Controller
         include_once __DIR__ . "/../views/dev/developer.php";
     }
 
-    public function traverseDirectory($path)
-    {
-        $directory = [];
-        if (is_dir($path)) {
-            $directory = [
-                'name' => basename($path), 
-                'type' => 'directory', 
-                'path' => realpath($path), 
-                'children' => [] 
-            ];
-            $dir = new DirectoryIterator($path);
-            $i = 0;
-            foreach ($dir as $file) {
-                if ($file->isDot()) {
-                    continue;
-                }
-
-                if ($file->isDir()) {
-                    $directory['children'][] = $this->traverseDirectory($file->getRealPath());
-                } else {
-                    $directory['children'][] = [
-                        'name' => $file->getFilename(), 
-                        'type' => 'file', 
-                        'extension' => $file->getExtension(), 
-                        'path' => $file->getRealPath()
-                    ];
-                }
-                $i++;
-            }
-        }
-        return $directory;
-    }
-
-    public function renderExplorer(&$files, $project, &$project_id, $nest) {
-        $myNest = $nest;
-        $i = $project_id * 1000;
-        echo '<div class="w-100">';
-        foreach ($files as $file) {
-            $icon = "";
-            if (isset($file['extension']) && $file['extension'] == 'docx') {
-                $icon = '<i class="fa fa-book text-success"></i>&nbsp;';
-            } else if (isset($file['extension']) && $file['extension'] == 'php') {
-                $icon = '<i class="fa fa-code text-danger"></i>&nbsp;';
-            } else if (isset($file['extension']) && $file['extension'] == 'png') {
-                $icon = '<i class="fa fa-image text-primary"></i>&nbsp;';
-            } else if ($file['type'] == 'directory') {
-                $icon = '<i class="fa fa-folder text-warning"></i>&nbsp;';
-            } 
-            if ($file['type'] == 'directory') {
-                echo '<h6 class="p-1 no-select text-nowrap" id="projectToggle-'.$i.'" style="margin-left:'.($myNest * 10).'px;margin-top:-5px;">
-                    <i class="fa fa-angle-right" id="toggle-icon-'.$i.'"></i>
-                    &nbsp;&nbsp;' . $icon . $file['name'] .'
-                </h6>
-                <div class="collapse" id="collapsible-'.$i.'">';
-                $this->renderExplorer($file['children'], $project, $i, ($nest + 1));
-            } else {
-                echo '<p class="fw-medium d-inline-block text-truncate" style="max-width:300px;font-size:14px;margin-top:-10px;margin-left:'. $myNest * 15 .'px;">'.$icon . $file['name'].'</p><br>';
-            }
-        
-            $i++;
-        }
-        echo '</div>
-            </div>';
-    }
-
-    public function isAssociativeArray($array) {
-        return (is_array($array) && array_keys($array) !== range(0, count($array) - 1));
-    }
-
     public function uploadFiles() {
+        echo "<div class='mt-5'></div>";
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $pro_id = $_POST['pro_id'];
             $task_id = $_POST['task_id'];
@@ -111,17 +46,99 @@ class DeveloperController extends Controller
             if (!file_exists( $src_path )) {
                 $this->createFolder($project_name . "/src");
             }
-            var_dump($_FILES["source"]);
             $uploadedFiles = $_FILES['source'];
+            $folders = [];
             for ($i = 0; $i < count($uploadedFiles['name']); $i++) {
                 $upload_file = $src_path . "/" . $uploadedFiles["full_path"][$i];
                 $destination = dirname($upload_file);
                 if (!is_dir($destination)) {
+                    $this->addUniqueElement($folders, $destination);
                     mkdir($destination, 0777, true);
                 }
+                $this->fileModel->createNewFile($task_id, $uploadedFiles["full_path"][$i], 'file');
                 move_uploaded_file($uploadedFiles["tmp_name"][$i], $upload_file);
+            }
+            $nodummies = [];
+            for ($i = 0; $i < count($folders); $i++) {
+                $this->addUniqueElement($nodummies, explode("/", substr($folders[$i],  mb_strlen($src_path, "UTF-8") + 1, mb_strlen($folders[$i])))[0]);
+            }
+            for ($i = 0; $i < count($nodummies); $i++) {
+                $this->fileModel->createNewFile($task_id, $nodummies[$i],"folder");
             }
         }
         $this->redirect('/dev/dashboard?page=task&id=' . $pro_id);
+    }
+
+    public function addUniqueElement(&$array, $element) {
+        if (!in_array($element, $array)) {
+            $array[] = $element;
+        }
+    }
+
+    public function deleteFolder($folderPath) {
+        // Check if the folder exists
+        if (!is_dir($folderPath)) {
+            echo "The specified path is not a valid directory.";
+            return false;
+        }
+
+        // Scan the folder and get all files and subfolders
+        $files = array_diff(scandir($folderPath), array('.', '..')); // Ignore '.' and '..'
+
+        // Iterate through each file and delete them
+        foreach ($files as $file) {
+            $filePath = $folderPath . DIRECTORY_SEPARATOR . $file;
+
+            // If it's a directory, call the function recursively
+            if (is_dir($filePath)) {
+                $this->deleteFolder($filePath); // Recursively delete subfolders
+            } else {
+                // If it's a file, delete it
+                unlink($filePath);
+            }
+        }
+
+        // After all contents are deleted, remove the folder itself
+        rmdir($folderPath);
+
+        echo "Folder and its contents have been deleted.";
+        return true;
+    }
+
+    public function removeFiles() {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            echo '<div class="mt-5"></div>';
+            $pro_id = $_POST['pro_id'];
+            $task_id = $_POST['task_id'];
+            $project_name = "";
+            $projects = $this->projectModel->getName($pro_id);
+            while ($project = $projects->fetch_assoc()) {
+                $project_name = $project["name"];
+            }
+            $files = $this->fileModel->getAllByFiles($task_id);
+            while ($file = $files->fetch_assoc()) {
+                $file = __DIR__ . "/../assets/projects/" . $project_name . "/src/" . $file['location'];
+                if (!strpos($file, "/doc/")) {
+                    if (file_exists($file)) {
+                        unlink($file);
+                    }
+                }
+            }
+            $this->fileModel->deleteFile($task_id, 'file');
+            $folders = $this->fileModel->getAllByFolder($task_id);
+            while ($folder = $folders->fetch_assoc()) {
+                $location = __DIR__ . "/../assets/projects/" . $project_name . "/src/" . $folder["location"];
+                if (!file_exists($location)) {
+                    mkdir($location,0777, true);
+                }
+                $this->deleteFolder($location);
+            }
+            $this->fileModel->deleteFile($task_id, "folder");
+        } 
+        $tasks = $this->taskModel->getAllTask($task_id);
+        while ($task = $tasks->fetch_assoc()) {
+            $this->taskModel->updateTaskStatus($task["id"], "pending");
+        }
+        $this->redirect('/dev/dashboard?page=task&id=' . $pro_id);  
     }
 }

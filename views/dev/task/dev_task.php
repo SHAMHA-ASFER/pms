@@ -79,9 +79,12 @@ $pro_id = isset($_GET['id']) ? $_GET['id'] : 0;
                                 <?php
                             } else if ($task['status'] == 'denied') {
                                 ?>
-                                    <button class="btn btn-primary" data-bs-toggle="modal"
-                                        data-bs-target="#submitTask-<?php echo $task['id']; ?>"><i
-                                            class="fa fa-plus"></i>&nbsp;Re-submit</button>
+                                <form action="/files/remove" method="post">
+                                    <input type="hidden" name="task_id" value="<?php echo $task['id']; ?>">
+                                    <input type="hidden" name="pro_id" value="<?php echo $pro_id; ?>">
+                                    <button class="btn btn-danger">
+                                        <i class="fa fa-trash"></i>&nbsp;Remove</button>
+                                </form>
                                 <?php
                             } else if ($task['status'] == 'completed') {
                                 ?>
@@ -120,7 +123,14 @@ while ($taskDev = $taskDevs->fetch_assoc()) {
                         <div class="input-group">
                             <input type="hidden" name="pro_id" value="<?php echo $pro_id; ?>">
                             <input type="hidden" name="task_id" value="<?php echo $task['id']; ?>">
-                            <input type="file" name="source[]" class="form-control" webkitdirectory multiple>
+                            <div class="input-group mb-3">
+                                <div class="input-group-text">Type</div>
+                                <select id="file-type" class="form-select">
+                                    <option value="FILE" selected>File</option>
+                                    <option value="FOLDER">Folder</option>
+                                </select>
+                            </div>
+                            <input type="file" name="source[]" class="form-control" id="input-file" multiple>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -138,30 +148,14 @@ while ($taskDev = $taskDevs->fetch_assoc()) {
 <script>
     $(document).ready(function () {
         $('#taskTable').DataTable();
-        $(document).on('click', '[id^=submit-]', function() {
-            const id = $(this).attr('id').split('-')[1];
-            const fileInput = $('#source-' + id);
-            const pro_id = $('#pro_id-' + id).val();
-            const task_id = $('#task_id-' + id).val();
-            const formData = new FormData();
-            formData.append('pro_id', pro_id);
-            formData.append('task_id', task_id);
-            for (let i = 0; i < fileInput.prop('files').length; i++) {
-                formData.append('source[]', fileInput.prop('files')[i]);
+        $('#file-type').on('change', function() {
+            const type = $(this).val();
+            $('#input-file').val('');
+            if (type == 'FILE') {
+                $('#input-file').removeAttr('webkitdirectory');
+            } else {
+                $('#input-file').attr('webkitdirectory', true);
             }
-            $.ajax({
-                url:"/files/add",
-                data:formData,
-                type:'post',
-                contentType:false,
-                processData:false,
-                success:function(response) {
-                    console.log(response);
-                },
-                error:function(xhr, status, error) {
-                    console.log("ERROR: " + error);
-                }
-            });
         });
     });
-</script>
+</script>   
