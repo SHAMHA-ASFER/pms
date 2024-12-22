@@ -3,12 +3,16 @@ require_once __DIR__ ."/../Models/Document.php";
 require_once __DIR__ ."/../Models/Project.php";
 require_once __DIR__ ."/../Models/User.php";
 require_once __DIR__ ."/../Models/ProjectAnalyzer.php";
+require_once __DIR__ ."/../Models/ProjectDeveloper.php";
+require_once __DIR__ ."/../Models/ProjectQA.php";
 
 class AnalyzerController extends Controller{
     private $documentModel;
     private $projectModel;
     private $userModel;
     private $projectAnalyzerModel;
+    private $projectDeveloperModel;
+    private $projectQAModel;
 
     public function __construct(){
         parent::__construct();
@@ -17,12 +21,14 @@ class AnalyzerController extends Controller{
         $this->documentModel = new DocumentModel();
         $this->userModel = new UserModel();
         $this->projectAnalyzerModel = new ProjectAnalyzerModel();
+        $this->projectDeveloperModel = new ProjectDeveloperModel();
+        $this->projectQAModel = new ProjectQAModel();
     }
 
     public function index(){
         $projects = $this->projectAnalyzerModel->getAllProjects($_SESSION['id']);
-        $documents = $this->documentModel->getAllDocuments();
-        $mdocuments = $this->documentModel->getAllDocuments();
+        $documents = $this->documentModel->getAllDocuments($_SESSION['id']);
+        $mdocuments = $this->documentModel->getAllDocuments($_SESSION['id']);
         $model = $this->projectModel;
         include_once __DIR__ ."/../views/analyzer.php";
     }

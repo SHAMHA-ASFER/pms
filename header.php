@@ -11,8 +11,6 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/2.1.8/css/dataTables.bootstrap5.css">
-    <script defer
-        src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
     <script defer src="https://cdn.datatables.net/2.1.8/js/dataTables.js"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
     <style>
@@ -25,6 +23,11 @@
             user-select: none;
             -webkit-user-select: none;
             -ms-user-select: none;
+        }
+
+        .hover:hover {
+            background-color:rgb(84, 123, 252);
+            cursor: pointer;
         }
     </style>
 </head>

@@ -56,8 +56,8 @@ $router->addRoute("POST","/files/add"               ,[DeveloperController::class
 $router->addRoute("POST","/files/remove"            ,[DeveloperController::class,"removeFiles"              ]);
 $router->addRoute("POST","/task/status/change"      ,[QAController::class       ,"updateTaskStatus"         ]);
 $router->addRoute("POST","/task/files/download"     ,[QAController::class       ,"downloadTask"             ]); 
-
-// phpinfo();
+$router->addRoute("POST","/member/chats"            ,[Controller::class         ,"getUserConversation"      ]); 
+$router->addRoute("POST","/member/chat/send"        ,[Controller::class         ,"sendMessage"              ]);
 
 include_once __DIR__ ."/header.php";
 $router->resolveRoute($request);

@@ -22,6 +22,7 @@ $page = isset($_GET['page']) ? $_GET['page'] : 'projects';
                 $projects = $this->projectModel->getAllProjects();
                 $i = 1;
                 while ($project = $projects->fetch_assoc()) {
+                    echo "<script>console.log('" . $project['name']. "]');</script>";
                     ?>
                     <div>
                         <h6 class="p-1 bg-light no-select" id="projectToggle-<?php echo $project['id']; ?>">

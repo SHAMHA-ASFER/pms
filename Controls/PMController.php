@@ -34,7 +34,7 @@ class PMController extends Controller{
         $this->documentModel = new DocumentModel();
     }
 
-    public function index(){
+    public function index(){  
         include_once __DIR__ ."/../views/pm/index.php";
     }
 
@@ -68,6 +68,7 @@ class PMController extends Controller{
             $year = $_POST['year'];
             $this->createFolder($project);
             $this->projectModel->createNewProject($project, $description, $_SESSION['id'], $year . "-" . $month . "-" . $day);
+            $this->createFolder($project . "/src");
         }
         $this->redirect("/manager/dashboard");
     }
@@ -211,11 +212,44 @@ class PMController extends Controller{
         $this->redirect('/manager/dashboard');
     }
 
-    public function Project() {
+    public function removeProject() {
+        echo '<p class="p-5"></p>';
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $pro_id = $_POST['pro_id'];
-            $this->projectModel->deleteProject($pro_id);
+            $projects = $this->projectModel->getName($pro_id);
+            while ($project = $projects->fetch_assoc()) {
+                $this->deleteFolder(__DIR__ . "/../assets/projects/" . $project['name']);                
+            }
+            $projects = $this->projectModel->deleteProject($pro_id);
         }
         $this->redirect('/manager/dashboard');
     }
+
+    public function deleteFolder($folderPath) {
+        // Check if the folder exists
+        if (!is_dir($folderPath)) {
+            echo "The specified path is not a directory or doesn't exist.";
+            return;
+        }
+    
+        // Scan all files and subdirectories inside the folder
+        $files = array_diff(scandir($folderPath), array('.', '..'));
+    
+        foreach ($files as $file) {
+            $filePath = $folderPath . DIRECTORY_SEPARATOR . $file;
+    
+            // If it's a directory, recursively call deleteFolder
+            if (is_dir($filePath)) {
+                $this->deleteFolder($filePath); // Recursive call to delete subfolder
+            } else {
+                // If it's a file, delete it
+                unlink($filePath);
+            }
+        }
+    
+        // After deleting all contents, remove the empty folder
+        rmdir($folderPath);
+    
+        echo "Folder and its contents deleted successfully.";
+    }    
 }   

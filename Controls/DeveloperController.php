@@ -5,6 +5,8 @@ require_once __DIR__ . "/../Models/File.php";
 require_once __DIR__ . "/../Models/TaskDeveloper.php";
 require_once __DIR__ . "/../Models/ProjectDeveloper.php";
 require_once __DIR__ . "/../Models/Project.php";
+require_once __DIR__ . "/../Models/ProjectQA.php";
+require_once __DIR__ . "/../Models/ProjectAnalyzer.php";
 
 class DeveloperController extends Controller
 {
@@ -14,6 +16,8 @@ class DeveloperController extends Controller
     private $taskDeveloperModel;
     private $userModel;
     private $fileModel;
+    private $projectQAModel;
+    private $projectAnalyzerModel;
 
     public function __construct()
     {
@@ -25,6 +29,8 @@ class DeveloperController extends Controller
         $this->fileModel = new FileModel();
         $this->projectDeveloperModel = new ProjectDeveloperModel();
         $this->taskDeveloperModel = new TaskDeveloperModel();
+        $this->projectQAModel = new ProjectQAModel();
+        $this->projectAnalyzerModel = new ProjectAnalyzerModel();
     }
 
     public function index()
@@ -53,7 +59,7 @@ class DeveloperController extends Controller
                 $destination = dirname($upload_file);
                 if (!is_dir($destination)) {
                     $this->addUniqueElement($folders, $destination);
-                    mkdir($destination, 0777, true);
+                    mkdir($destination, 0755, true);
                 }
                 $this->fileModel->createNewFile($task_id, $uploadedFiles["full_path"][$i], 'file');
                 move_uploaded_file($uploadedFiles["tmp_name"][$i], $upload_file);

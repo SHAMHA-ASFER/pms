@@ -33,7 +33,7 @@
                                 if ($i == 0) {
                                     ?>
                                     <tr>
-                                        <td rowspan="<?php echo $dev_count; ?>"><?php echo $project['name']; ?></td>
+                                        <td rowspan="<?php echo $dev_count; ?>"><?php echo $project['name'] . $projects->num_rows; ?></td>
                                         <td class="text-center"><?php echo $name; ?></td>
                                         <td class="col-md-2" rowspan="<?php echo $dev_count; ?>">
                                             <button class="btn btn-primary" data-bs-toggle="modal"
@@ -67,6 +67,7 @@
                                 </tr>
                                 <?php
                             }
+                            $i = 0;
                         }
                         ?>
                     </tbody>

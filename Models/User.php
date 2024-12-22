@@ -29,7 +29,7 @@ class UserModel extends Model {
     private $authenticate = "SELECT id, fname, lname, email, profile, role FROM `user` WHERE username = ? AND password = ?";
     private $user_count = "SELECT COUNT(*) as count FROM `user`";
     private $get_users_by_manager = "SELECT * FROM `user` WHERE manager = ? AND role = ?";
-    private $get_name = "SELECT fname, lname FROM `user` WHERE id = ?";
+    private $get_name = "SELECT * FROM `user` WHERE id = ?";
 
     public function __construct() {
         parent::__construct();

@@ -1,6 +1,7 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
     <div class="container-fluid">
-        <a class="navbar-brand fw-bold" href="#"><?php echo $_SESSION['lname'] . ","; ?></a>
+    <a class="navbar-brand me-auto" href="/">
+    <img src="/assets/images/user/<?php echo $_SESSION['profile']; ?>" width="40" height="40" class="rounded-circle me-2" alt=""><?php echo $_SESSION["lname"] . "," ?></a>
         <!-- Toggler Button -->
         <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar"
             aria-controls="offcanvasNavbar" aria-expanded="false" aria-label="Toggle navigation">
