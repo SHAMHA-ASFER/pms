@@ -1,11 +1,17 @@
 <?php
 require_once __DIR__ ."/../Models/User.php";
+require_once __DIR__ ."/../Models/Chat.php";
 ob_start();
 class Controller{
+    private $userModel;
+    private $chatModel;
+
     public function __construct() {
         if (session_status() == PHP_SESSION_NONE){
             session_start();
         }
+        $this->userModel = new UserModel();
+        $this->chatModel = new ChatModel();
     }
 
     public function initNav() {
@@ -144,5 +150,32 @@ class Controller{
 
     public function isAssociativeArray($array) {
         return (is_array($array) && array_keys($array) !== range(0, count($array) - 1));
+    }
+
+    
+    public function getUserConversation() {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $pro_id = $_POST['pro_id'];
+            $recv = $_POST['user_id'];
+            $chats = $this->chatModel->getAllMessages($pro_id, $_SESSION['id'], $recv);
+            echo '[';
+            while ($chat = $chats->fetch_assoc()) {
+                foreach($chat as $key => $value) {
+                    echo $value . "<?>";
+                }
+                echo "<#>";
+            }
+            echo ']';
+        }
+    }
+
+    public function sendMessage() {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+            $pro_id = $_POST['pro_id'];
+            $user_id = $_POST['user_id'];
+            $message = $_POST['message'];
+            echo $user_id;
+            $this->chatModel->createNewChat($pro_id, $_SESSION['id'], $user_id, $message);
+        }
     }
 }

@@ -1,6 +1,7 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
     <div class="container-fluid">
-        <a class="navbar-brand" href="/"><?php echo $_SESSION["lname"] . "," ?></a>
+    <a class="navbar-brand me-auto" href="/">
+    <img src="/assets/images/user/<?php echo $_SESSION['profile']; ?>" width="40" height="40" class="rounded-circle me-2" alt=""><?php echo $_SESSION["lname"] . "," ?></a>
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto">
                 <li class="nav-item mx-2">

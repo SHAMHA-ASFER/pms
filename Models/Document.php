@@ -17,7 +17,7 @@ class DocumentModel extends Model{
     private $update_document = "UPDATE `document` SET location = ?, last_modified = CURRENT_TIMESTAMP WHERE id = ?";
     private $get_document = "SELECT * FROM `document` WHERE id = ?";
     private $get_all_document_by_project = "SELECT * FROM  `document` WHERE pro_id = ?";
-    private $get_all_document = "SELECT * FROM  `document`";
+    private $get_all_document = "SELECT * FROM  `document` WHERE updated_by = ?";
     private $delete_document = "DELETE FROM `document` WHERE id = ?";
     private $update_status = "UPDATE `document` SET status = ? WHERE id = ?";
     private $status = "SELECT COLUMN_TYPE FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'document' AND COLUMN_NAME = 'status' AND TABLE_SCHEMA = 'projects';";
@@ -52,8 +52,8 @@ class DocumentModel extends Model{
         return $this->fetch($this->get_all_document_by_project, [$pro_id],"i");
     }
 
-    public function getAllDocuments(){
-        return $this->fetch($this->get_all_document);
+    public function getAllDocuments($updated_by){
+        return $this->fetch($this->get_all_document, [$updated_by],"i");
     }
 
     public function setStatus($id, $status) {

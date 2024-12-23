@@ -5,6 +5,8 @@ require_once __DIR__ ."/../Models/Project.php";
 require_once __DIR__ ."/../Models/File.php";
 require_once __DIR__ ."/../Models/ProjectQA.php";
 require_once __DIR__ ."/../Models/User.php";
+require_once __DIR__ ."/../Models/ProjectAnalyzer.php";
+require_once __DIR__ ."/../Models/ProjectDeveloper.php";
 
 class QAController extends Controller{
     private $taskModel;
@@ -13,6 +15,8 @@ class QAController extends Controller{
     private $projectQAModel;
     private $fileModel;
     private $userModel;
+    private $projectAnalyzerModel;
+    private $projectDeveloperModel;
 
     public function __construct(){
         parent::__construct();
@@ -23,6 +27,8 @@ class QAController extends Controller{
         $this->projectQAModel = new ProjectQAModel();
         $this->userModel = new UserModel();
         $this->taskQAModel = new TaskQAModel();
+        $this->projectAnalyzerModel = new ProjectAnalyzerModel();
+        $this->projectDeveloperModel = new ProjectDeveloperModel();
     }
 
     public function index(){
@@ -52,26 +58,24 @@ class QAController extends Controller{
             $files = [];
             while ($source = $sources->fetch_assoc()) {
                 $files[] = __DIR__ . "/../assets/projects/" .$project_name . "/src/" .$source['location'];
-            }
+            }            
             $zip = new ZipArchive();
             $zipFile = $project_name . ".zip";
             if ($zip->open($zipFile, ZipArchive::CREATE) === true) {
                 foreach($files as $file) {
+                    echo $file;
                     if (file_exists($file)) {
-                        $absPath = realpath($file);
-                        if ($handle = fopen($absPath, "r")) {
-                            fclose($handle);
-                        } 
-                        // $zip->addFile($file, basename($file));
+                        $zip->addFile($file, basename($file));
                     }
                 }
+                // $zip->addFile(__DIR__ . "/../header.php", basename(__DIR__ . "/../header.php"));
             }
             $zip->close();
-            // header('Content-Type: application/zip');
-            // header('Content-Disposition: attachment; filename="' . $zipFile . '"');
-            // header('Content-Length: ' . filesize($zipFile));
-            // readfile($zipFile);
-            // unlink($zipFile);
+            header('Content-Type: application/zip');
+            header('Content-Disposition: attachment; filename="' . $zipFile . '"');
+            header('Content-Length: ' . filesize($zipFile));
+            readfile($zipFile);
+            unlink($zipFile);
         }
         // $this->redirect('/qa/dashboard?page=task&id=' . $pro_id);
     }
